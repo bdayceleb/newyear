@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024 Calendar ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        .calendar-container {
+            display: flex;
+            gap: 40px;
+        }
+
+        .photo-container {
+            width: 350px;
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .calendar {
+            width: 350px;
+            height: 500px;
+            border-radius: 12px;
+            background-color: #111;
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .month {
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .calendar h2 {
+            font-family: 'Playfair Display', serif;
+            margin: 10px 0 5px;
+            font-size: 1.8rem;
+        }
+
+        .calendar h3 {
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .day:hover {
+            background-color: #444;
+        }
+
+        .highlighted {
+            background-color: #e91e63;
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #e91e63;
+            color: white;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>2024 Calendar ❤️</h1>
+
+    <div class="calendar-container">
+        <div class="photo-container">
+            <img id="photo" src="https://via.placeholder.com/350" alt="Photo">
+        </div>
+        <div class="calendar">
+            <div id="calendar-header"></div>
+            <div class="weekdays" id="weekdays"></div>
+            <div class="days" id="days"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
+    </div>
+
+    <script>
+        const highlightedDates = {
+            1: [4, 5, 9, 13, 24],
+            2: [10],
+            3: [1, 9],
+            4: [21, 27, 29],
+            5: [27, 28],
+            6: [5, 21],
+            7: [5, 25],
+            8: [2, 5],
+            9: [7, 16, 18, 23],
+            10: [16, 25, 31],
+            11: [2, 24],
+            12: [1, 9, 15, 18]
+        };
+
+        const photos = {
+            1: { 4: "photos/13.JPG", 5: "photos/8.JPG", 9: "photos/4.JPG", 13: "photos/9.JPG", 24: "photos/14.jpg" },
+            2: { 10: "photos/11.jpg" },
+            3: { 1: "photos/16.png", 9: "photos/17.jpg" },
+            4: { 21: "photos/aa.jpg" , 27: "photos/18.jpg", 29: "photos/10.jpg"},
+            5: { 27: "photos/5.jpg", 28: "photos/1.JPG" },
+            6: { 5: "photos/20.jpg" , 21: "photos/24.jpg"},
+            7: { 5: "photos/5.jpg", 5: "photos/25.jpg", 25: "photos/26.jpg" },
+            8: { 2: "photos/6.JPG", 5: "photos/2.JPG" },
+            9: { 7: "photos/7.jpg", 16: "photos/27.jpg", 18: "photos/28.jpg", 23: "photos/21.jpg"},
+            10: { 16: "photos/ab.png", 25: "photos/12.PNG", 31: "photos/5.JPG" },
+            11: { 2: "photos/22.jpg",24: "photos/new.jpg" },
+            12: { 1: "photos/3.JPG", 9: "photos/30.jpg", 15: "photos/31.jpg", 18: "photos/32.jpg" }
+        };
+
+        const weekdays = ["S", "M", "T", "W", "T", "F", "S"];
+        const daysInMonth = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const startDays = [1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6]; // 2024
+
+        let currentMonth = 0;
+
+        const calendarHeader = document.getElementById('calendar-header');
+        const weekdaysContainer = document.getElementById('weekdays');
+        const daysContainer = document.getElementById('days');
+        const photo = document.getElementById('photo');
+
+        weekdaysContainer.innerHTML = weekdays.map(day => `<div>${day}</div>`).join('');
+
+        function renderCalendar(month) {
+            calendarHeader.innerHTML = `<h2>${new Date(2024, month).toLocaleString('default', { month: 'long' })}</h2><h3>2024</h3>`;
+            daysContainer.innerHTML = '';
+            for (let i = 0; i < startDays[month]; i++) daysContainer.innerHTML += `<div></div>`;
+            for (let day = 1; day <= daysInMonth[month]; day++) {
+                const isHighlighted = highlightedDates[month + 1]?.includes(day);
+                daysContainer.innerHTML += `<div class="day ${isHighlighted ? 'highlighted' : ''}" onclick="changePhoto(${month + 1}, ${day})">${day}</div>`;
+            }
+        }
+
+        function changePhoto(month, day) {
+            if (photos[month]?.[day]) photo.src = photos[month][day];
+        }
+
+        document.getElementById('prev').onclick = () => renderCalendar((currentMonth = (currentMonth - 1 + 12) % 12));
+        document.getElementById('next').onclick = () => renderCalendar((currentMonth = (currentMonth + 1) % 12));
+
+        renderCalendar(currentMonth);
+    </script>
+</body>
+</html>

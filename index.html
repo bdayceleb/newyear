@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where It All Began ❤️</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l-4dSBTvaX45ulzaYK_dVA3tOUv8k94"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+            color: #333;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 500;
+            text-align: center;
+            margin: 20px 0;
+            color: #222;
+        }
+
+        #map {
+            height: 400px;
+            width: 90%;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline {
+            width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .memory {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+            transition: all 0.2s ease;
+        }
+
+        .memory:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .memory h3 {
+            margin: 0 0 5px;
+            font-size: 1.2rem;
+            color: #444;
+        }
+
+        .memory p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 30px;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            #map {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Where It All Began ❤️</h1>
+    <div id="map"></div>
+
+    <div class="timeline">
+        <h2 style="font-weight: 500; color: #444; margin-bottom: 15px;">Memories</h2>
+        <a href="calendar.html" target="_blank" style="text-decoration: none; color: inherit;">
+            <div class="memory">
+                <h3>The 2024 Calendar 👀</h3>
+                <p>The moment our eyes met, I knew something special was about to start.</p>
+            </div>
+        </a>        
+        <a href="const.html" target="_blank" style="text-decoration: none; color: inherit;">
+            <div class="memory">
+                <h3>The Time Capsule🚶‍♂️🚶‍♀️</h3>
+                <p>It's time that we promise each other something, for next year. We will open it next year at this time and dw it will remind us over an email. </p>
+            </div>
+        </a>    
+    </div>
+
+    <footer>
+        Created with ❤️ to celebrate our story.
+    </footer>
+
+    <script>
+        function initMap() {
+            // Replace with your coordinates
+            const meetingPoint = { lat: 19.1057, lng: 73.0072}; // Example: Delhi Coordinates
+
+            // Create the map
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 15,
+                center: meetingPoint,
+                styles: [
+                    {
+                        featureType: "all",
+                        elementType: "geometry",
+                        stylers: [{ color: "#eaeaea" }]
+                    },
+                    {
+                        featureType: "road",
+                        elementType: "geometry.stroke",
+                        stylers: [{ color: "#d6d6d6" }]
+                    },
+                    {
+                        featureType: "poi.business",
+                        stylers: [{ visibility: "off" }]
+                    }
+                ]
+            });
+
+            // Add marker
+            const marker = new google.maps.Marker({
+                position: meetingPoint,
+                map: map,
+                title: "Our First Meeting ❤️",
+                animation: google.maps.Animation.DROP,
+                icon: {
+                    url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+                    scaledSize: new google.maps.Size(40, 40)
+                }
+            });
+
+            // Info window
+            const infoWindow = new google.maps.InfoWindow({
+                content: `
+                    <div style="font-family: 'Inter', sans-serif; font-size: 14px; color: #555;">
+                        <h3 style="margin: 0; font-weight: 500;">Where It All Started ❤️</h3>
+                        <p style="margin-top: 5px;">This is where we first met and started our journey!</p>
+                    </div>
+                `,
+            });
+
+            marker.addListener("click", () => {
+                infoWindow.open(map, marker);
+            });
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
